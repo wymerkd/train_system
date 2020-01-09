@@ -33,7 +33,7 @@ class Train
   end
 
   def ==(train_to_compare)
-    self.train_name() == train_to_compare.train_name()
+    self.train_name() == train_to_compare.train_name() && self.id == train_to_compare.id
   end
 
   def self.clear
@@ -54,17 +54,17 @@ class Train
   def update(attributes)
     if (attributes.has_key?(:train_name)) && (attributes.fetch(:train_name) != '')
       @train_name = attributes.fetch(:train_name)
-      DB.exec("UPDATE trains SET name = '#{@train_name}' WHERE id = #{@id};")
+      DB.exec("UPDATE trains SET train_name = '#{@train_name}' WHERE id = #{@id};")
     end
-    artist_name = attributes.fetch(:artist_name)
-    if artist_name != nil
-      artist = DB.exec("SELECT * FROM artists WHERE lower(name) =  '#{artist_name.downcase}';").first
-      if artist == nil
-        new_artist = train.new({:name => "#{artist_name}", :id => nil})
-        new_artist.save()
-        artist = DB.exec("SELECT * FROM artists WHERE id = #{new_artist.id};").first
+    stop_name = attributes.fetch(:stop_name)
+    if stop_name != nil
+      city = DB.exec("SELECT * FROM cities WHERE lower(stop_name) =  '#{stop_name.downcase}';").first
+      if city == nil
+        new_city = Train.new({:stop_name => "#{stop_name}", :departure => "#{departure}", :id => nil})
+        new_city.save()
+        city = DB.exec("SELECT * FROM cities WHERE id = #{new_city.id};").first
       end
-      DB.exec("INSERT INTO trains_artists (artist_id, train_id) VALUES (#{artist['id'].to_i}, #{@id});")
+      DB.exec("INSERT INTO trains_cities (cities_id, trains_id) VALUES (#{city['id'].to_i}, #{@id});")
     end
   end
 
@@ -77,25 +77,25 @@ class Train
     DB.exec("DELETE FROM trains WHERE id = #{@id};")
   end
 
-  def sold
-    result = DB.exec("INSERT INTO sold_trains (train_name) VALUES ('#{@train_name}') RETURNING id;")
-    @id = result.first().fetch('id').to_i
-    DB.exec("DELETE FROM trains WHERE id = #{@id};")
-  end
-
-  def songs
-    Song.find_by_train(self.id)
-  end
+  # def sold
+  #   result = DB.exec("INSERT INTO sold_trains (train_name) VALUES ('#{@train_name}') RETURNING id;")
+  #   @id = result.first().fetch('id').to_i
+  #   DB.exec("DELETE FROM trains WHERE id = #{@id};")
+  # end
+  #
+  # def songs
+  #   Song.find_by_train(self.id)
+  # end
 
   def self.random
     self.get_trains ('SELECT * FROM trains ORDER BY RAND() LIMIT 1;')
   end
 
-  def artists
-    results = DB.exec("SELECT artist_id FROM trains_artists WHERE train_id = #{@id}")
-    id_string = results.map{ |result| result.fetch("artist_id")}.join(', ')
+  def cities
+    results = DB.exec("SELECT city_id FROM trains_cities WHERE train_id = #{@id}")
+    id_string = results.map{ |result| result.fetch("city_id")}.join(', ')
     (id_string != '') ?
-    Artist.get_artists("SELECT * FROM artists WHERE id IN (#{id_string});") :
+    City.get_cities("SELECT * FROM cities WHERE id IN (#{id_string});") :
     nil
   end
 end
