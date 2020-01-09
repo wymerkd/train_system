@@ -1,0 +1,32 @@
+
+<h3>Stops</h3>
+
+
+<a href="/cities"><p class="btn-lg btn-primary">All cities</p></a>
+
+
+<form action="/city">
+  <div class="form-group row">
+    <label for="search" class="col-sm-2 col-form-label col-form-label-lg"></label>
+    <div class="col-sm-4">
+      <input id="search" name="search" class="form-control form-control-lg" type="text" placeholder="Search">
+    </div>
+    <div class="col-sm-4">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    <label for="search" class="col-sm-2 col-form-label col-form-label-lg"></label>
+
+  </div>
+</form>
+
+<% if @city.any? %>
+<ul>
+  <% @city.each do |city| %>
+  <li><a href="/cities/<%= city.id %>"><%= city.stop_name %></a></li>
+  <% end %>
+</ul>
+<% else %>
+<p>There are currently no records to display.</p>
+<% end %>
+
+<a href="/city/new">Add a new city</a>

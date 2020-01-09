@@ -1,0 +1,28 @@
+<h2>Train Name: <%= @train.train_name %></h2>
+
+<h3>Train Songs</h3>
+
+  <% if @train.cities %>
+    <ul>
+      <% @train.cities.each do |song| %>
+        <li><a href="/trains/<%= @train.id %>/cities/<%= city.id %>"><%= city.stop_name %></a></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>There are no cities listed for this train yet.</p>
+  <% end %>
+
+<h4>Add a city:</h4>
+
+<form action="/trains/<%= @train.id %>/cities" method="post">
+  <div class="form-group">
+    <label for="stop_name">Stop name</label>
+    <input id="stop_name" name="stop_name" class="form-control" type="text" required>
+  </div>
+  <button type="submit" class="btn">Add stop</button>
+</form>
+
+
+
+<p><a href="/trains/<%= @train.id %>/edit">Edit train</a></p>
+<p><a href="/trains">Return to train list</a></p>

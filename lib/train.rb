@@ -8,8 +8,8 @@ class Train
     @id = attributes.fetch(:id)
   end
 
-  def self.get_trains(db_query)
-    returned_trains = DB.exec(db_query)
+  def self.get_trains(query)
+    returned_trains = DB.exec('SELECT * FROM trains;')
     trains = []
     returned_trains.each() do |train|
       train_name = train.fetch('train_name')
@@ -23,9 +23,9 @@ class Train
     self.get_trains ('SELECT * FROM trains;')
   end
 
-  def self.all_sold
-    self.get_trains ('SELECT * FROM sold_trains;')
-  end
+  # def self.all_sold
+  #   self.get_trains ('SELECT * FROM sold_trains;')
+  # end
 
   def save
     result = DB.exec("INSERT INTO trains (train_name) VALUES ('#{@train_name}') RETURNING id;")

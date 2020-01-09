@@ -1,0 +1,30 @@
+
+
+<a href="/trains"><p class="btn-lg btn-primary">All trains</p></a>
+
+
+<form action="/trains">
+  <div class="form-group row">
+    <label for="search" class="col-sm-2 col-form-label col-form-label-lg"></label>
+    <div class="col-sm-4">
+      <input id="search" name="search" class="form-control form-control-lg" type="text" placeholder="Search">
+    </div>
+    <div class="col-sm-4">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    <label for="search" class="col-sm-2 col-form-label col-form-label-lg"></label>
+
+  </div>
+</form>
+
+<% if @trains.any? %>
+<ul>
+  <% @trains.each do |album| %>
+  <li><a href="/trains/<%= train.id %>"><%= train.train_name %></a></li>
+  <% end %>
+</ul>
+<% else %>
+<p>There are currently no records to display.</p>
+<% end %>
+
+<a href="/trains/new">Add a new train</a>
