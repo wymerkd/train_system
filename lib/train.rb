@@ -8,8 +8,8 @@ class Train
     @id = attributes.fetch(:id)
   end
 
-  def self.get_trains(query)
-    returned_trains = DB.exec('SELECT * FROM trains;')
+  def self.get_trains
+    returned_trains = DB.exec("SELECT * FROM trains;")
     trains = []
     returned_trains.each() do |train|
       train_name = train.fetch('train_name')
@@ -20,7 +20,7 @@ class Train
   end
 
   def self.all
-    self.get_trains ('SELECT * FROM trains;')
+    self.get_trains
   end
 
   # def self.all_sold
@@ -33,7 +33,11 @@ class Train
   end
 
   def ==(train_to_compare)
-    self.train_name() == train_to_compare.train_name() && self.id == train_to_compare.id
+    if train_to_compare != nil
+      self.train_name() == train_to_compare.train_name && self.id == train_to_compare.id
+    else
+      false
+    end
   end
 
   def self.clear
@@ -92,8 +96,8 @@ class Train
   end
 
   def cities
-    results = DB.exec("SELECT city_id FROM trains_cities WHERE train_id = #{@id}")
-    id_string = results.map{ |result| result.fetch("city_id")}.join(', ')
+    results = DB.exec("SELECT cities_id FROM trains_cities WHERE trains_id = #{@id}")
+    id_string = results.map{ |result| result.fetch("cities_id")}.join(', ')
     (id_string != '') ?
     City.get_cities("SELECT * FROM cities WHERE id IN (#{id_string});") :
     nil

@@ -5,6 +5,8 @@ require('./lib/city')
 require('pry')
 require('pg')
 also_reload('lib/**/*.rb')
+DB = PG.connect({:dbname => 'train_system'})
+
 get('/') do
   redirect to('/trains')
 end
@@ -59,8 +61,9 @@ delete ('/trains/:id') do
   redirect to('/trains')
 end
 
-# get ('/albums/:id/songs/:song_id') do
-#   @song = Song.find(params[:song_id].to_i())
+#song routing (watch this)
+# get ('/trains/:id/cities/:city_id') do
+#   @city = .find(params[:song_id].to_i())
 #   if @song != nil
 #     erb(:song)
 #   else
@@ -69,13 +72,13 @@ end
 #   end
 # end
 
-# post ('/albums/:id/songs') do
-#   @train = Album.find(params[:id].to_i())
-#   song = Song.new({:name => params[:song_name], :train_id => @train.id, :id => nil})
-#   song.save()
-#   erb(:train)
+# post ('/trains/:id/cities') do
+#   @train = Train.find(params[:id].to_i())
+#   city = City.new({:stop_name => params[:stop_name], :departure => params[:departure], :train_id => @train.id, :id => nil})
+#   city.save()
+#   erb(:city)
 # end
-#
+
 # patch ('/albums/:id/songs/:song_id') do
 #   @train= Album.find(params[:id].to_i())
 #   song = Song.find(params[:song_id].to_i())
@@ -118,21 +121,21 @@ end
 
 post ('/cities') do
   stop_name = params[:stop_name]
-  @city = City.new({:stop_name => stop_name, :departure => departure , :id => nil})
+  @city = City.new({:stop_name => stop_name, :departure => nil , :id => nil})
   @city.save()
   redirect to('/cities')
 end
 
-# post ('/artists/:id') do
-#   name = params[:artist_name]
-#   @artist = Artist.new({:name => name, :id => nil})
-#   @artist.save()
-#   redirect to('/artists')
-# end
-
-
 post ('/cities/:id') do
-  stop_name = params[:train_name]
+  stop_name = params[:stop_name]
+  @city = City.new({:stop_name => stop_name, :departure => nil , :id => nil})
+  @city.save()
+  redirect to('/cities')
+end
+
+
+post ('/trains/:id/cities') do
+  train_name = params[:train_name]
   id = params[:id]
   @city = City.find(params[:id].to_i())
   train = Train.new({:train_name => train_name, :id => id})

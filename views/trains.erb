@@ -19,7 +19,7 @@
 
 <% if @trains.any? %>
 <ul>
-  <% @trains.each do |album| %>
+  <% @trains.each do |train| %>
   <li><a href="/trains/<%= train.id %>"><%= train.train_name %></a></li>
   <% end %>
 </ul>
